@@ -6,9 +6,9 @@ Feb 27th, 2017
 ## Proposal
 This capstone proposal is chosen from Kaggle competition: **Facial Keypoints Detection**. The official homepage of this competition is: [https://www.kaggle.com/c/facial-keypoints-detection](https://www.kaggle.com/c/facial-keypoints-detection).
 
-### Domain Backgroundex
+### Domain Background
 
-Computer vision is a very important technology, and it has been applied in many areas. The objective of this task is to predict keypoint positions on face images. This can be used as a building block in several applications, such as:
+Computer vision is a very important technology, and it has been applied in many areas. The objective of this work is to predict keypoint positions on face images. This can be used as a building block in several applications, such as:
 
 - tracking faces in images and video
 - analysing facial expressions
@@ -16,6 +16,9 @@ Computer vision is a very important technology, and it has been applied in many 
 - biometrics / face recognition
 <div align=center>
 ![background](background.png)
+</div>
+<div align=center>
+**Figure 1**
 </div>
 
 Detecing facial keypoints is a very challenging problem.  Facial features vary greatly from one individual to another, and even for a single individual, there is a large amount of variation due to 3D pose, size, position, viewing angle, and illumination conditions. Computer vision research has come a long way in addressing these difficulties, but there remain many opportunities for improvement.
@@ -33,7 +36,7 @@ Left and right here refers to the point of view of the subject.
 
 The input image is consists of a list of pixels (ordered by row), as integers in (0,255). The images are (96x96) pixels.
 
-We need to use the given images as the inputs, and the given keypoints as outputs to get a prediction model, and use this model to predict the test dataset.
+We need to use the given images as the inputs, and the given keypoints as outputs to get a prediction model, and use this model to predict the test dataset. Because the inputs and outputs are numerical data, so in matching learning, it is a regression problem.
 
 ### Datasets and Inputs
 
@@ -51,11 +54,26 @@ In some examples, some of the target keypoint positions are misssing (encoded as
 
 ### Solution Statement
 
-This task is complex to train the model, because it has large scale high-dimension input data, and the multiple outputs. **Convolutional neural networks (CNN)** is a powerful matching learning method for solving this kind of problems, which data are in high-dimension, and it has been proved very useful. Also, CNN can be combined with GPU for parallel computing, which can help accelerate computing for saving the model training time. The tool I will choose **Tensorflow**, which is an open-source software library for machine intelligence. And it has been widely used in many companies.
+This task is complex to train the model, because it has large scale high-dimension input data, and the multiple outputs. **Convolutional neural networks (CNN)** is a powerful matching learning method for solving this kind of problems, which data are in high-dimension, and it has been proved very useful. 
 
+According to [**Reference 4**](http://cs231n.github.io/convolutional-networks), compared with ordinary Neural Networks, CNN architectures make the explicit assumption that the inputs are images, which allows us to encode certain properties into the architecture, and these make the forward function more efficient to implement and vastly reduce the amount of parameters in the network. Also, CNN can be combined with GPU for parallel computing, which can help accelerate computing for saving the model training time. 
+
+The tool I will choose **Tensorflow**, which is an open-source software library for machine intelligence. And it has been widely used in many companies.
+ 
 ### Benchmark Model
 
-The total training data are 7049 images. Shuffle the training dataset for model training, and split 5% images (about 350) for cross validation. Record the training loss and validation loss according to the metrics, and Plot them into one figure in each training iteration. Find the properties of cross validation loss, and choose the best one for the model.
+In order to measure the model trained from the training dataset, this project will use the scores in Kaggle official leaderboard as the benchmark. And according to the offical announcements, this leaderboard is calculated with approximately 50% of the test data (total 1783 images). And some particular scores in the public leaderboards are:
+ <div align=center>
+ 
+\#   | Score
+------------- | -------------
+1   | 1.53319
+10  | 2.03259
+50| 2.56286
+100 | 3.80685
+ ...|...
+ </div>
+This capstone will use the model to predict the test dataset and submit the results into Kaggle platform for getting the final score, then compare our score with these scores as benchmark to measure the performance of my model for analysis.
 
 ### Evaluation Metrics
 
@@ -75,18 +93,21 @@ where $\hat{y_i}$ is the predicted value and $y_i$ is the original value.
 
 - Download three data file for test, and load them into python variables using ```pd.Dataframe()```.
 
-- Explorate the data, the figure in the below is an example, the gray picture is one person face, and the blue point are the marked keypoints in face.
+- Explore the data, an example is shown in **Figure 2**, the gray picture is one person face, and the blue point are the marked keypoints in face.
 <div align=center>
 ![example](example.png)
 </div>
-
+<div align=center>
+**Figure 2**
+</div>
 - Do some actions for preprocessing, drop the nan data, and reshape the image data (because the origin image data is one list which is row-ordered).
 - Shuffle and split data for creating validation dataset for test. And because of the large num of images, in order to train the model efficiently, we may need to divide the data into some batches, and load them into tensorflow initial variables.
 
 - The most important part, design the CNN model, CNN model consists of many layers. How many convolutional layers, what the size of each convolutional kernels and where to put the max-pooling layer,.etc, these are all need take into consideration. So a good model leverages very about all these components. And these may need a lot of attempts, and choose the least cost model in validation dataset.
--  Use the trained model to predict the testing dataset, and upload the results into Kaggle platform for judgements.
+-  Use the trained model to predict the testing dataset, and upload the results into Kaggle platform for judgements, compare the results with leaderboard scores and do some analysis.
 ### References
 
 1. Kaggle Competition HomePage: https://www.kaggle.com/c/facial-keypoints-detection.
 2. CNN tutorial in deepleanring.net: http://deeplearning.net/tutorial/lenet.html
 3. Udacity deep learing course: https://www.udacity.com/course/deep-learning--ud730
+4. Convolutional Neural Networks for Visual Recognition: http://cs231n.github.io/convolutional-networks
